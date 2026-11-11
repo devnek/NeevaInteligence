@@ -1,0 +1,80 @@
+{% extends 'core/base.html' %}
+
+{% block title %}NeevaIntelligence | Strategic Market Research & Analysis{% endblock %}
+
+{% block content %}
+<!-- Section 1: Introduction / Hero -->
+<section id="intro" class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <span class="section-label">Institutional Intelligence</span>
+            <h1>Strategic Analysis. <br>Proven Impact.</h1>
+            <p>NeevaIntelligence provides high-stakes market research, identifying hidden trends and competitive opportunities for global enterprises.</p>
+            <div class="hero-services">
+                <ul class="hero-services-list">
+                    <li><i class="fas fa-microscope"></i> In-Depth Analysis</li>
+                    <li><i class="fas fa-chart-line"></i> Predictive Trends</li>
+                    <li><i class="fas fa-shield-alt"></i> Risk Mitigation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 2: Featured Reports Preview -->
+<section id="reports" class="section-dark">
+    <div class="container">
+        <span class="section-label">Latest Intelligence</span>
+        <h2 class="section-title">Featured Insights</h2>
+
+        <div class="reports-grid">
+            {% for report in reports %}
+            <div class="report-card">
+                <h3>{{ report.title }}</h3>
+                <p>{{ report.summary }}</p>
+                <a href="{% url 'report_detail' report.slug %}" class="btn-read">View Full Report <i class="fas fa-arrow-right"></i></a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="archive-link-wrapper">
+            <a href="{% url 'reports_list' %}" class="btn-outline">View All Intelligence Archive</a>
+        </div>
+    </div>
+</section>
+
+<!-- Section 3: Contact / Consultation -->
+<section id="contact">
+    <div class="container">
+        <div class="contact-layout">
+            <div class="contact-info-text">
+                <span class="section-label">Consultation</span>
+                <h2 class="section-title">Partner with NeevaIntelligence.</h2>
+                <p class="contact-description">Ready to leverage institutional-grade market intelligence? Our analysts are ready to discuss your specific needs.</p>
+            </div>
+
+            <div class="contact-container">
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn-submit">Initiate Consultation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Portal - Application Flow Diagram</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .function-desc {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #3498db;
+        }
+        .function-name {
+            font-weight: bold;
+            color: #2980b9;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Research Portal - Application Architecture</h1>
+        
+        <h2>Flow Diagram</h2>
+        <div class="mermaid">
+            graph TD
+                User((User)) -->|Browser Access| URL[URL Dispatcher]
+                
+                URL -->|/| HomeView[views.home]
+                URL -->|/leadership/| LeadView[views.leadership]
+                URL -->|/intelligence/| ListView[views.reports_list]
+                URL -->|/intelligence/:slug/| DetailView[views.report_detail]
+                
+                HomeView -->|GET| HomeTpl[index.html]
+                HomeView -->|POST| FormSave[Save ContactMessage]
+                FormSave -->|Redirect| HomeView
+                
+                ListView -->|Calls| Metadata[get_reports_metadata]
+                Metadata -->|Reads| MD_Files[(reports/*.md)]
+                ListView -->|Renders| ListTpl[reports_list.html]
+                
+                DetailView -->|Reads| MD_File[(reports/slug.md)]
+                MD_File -->|Convert| HTML[Markdown to HTML]
+                DetailView -->|Renders| DetailTpl[report_detail.html]
+                
+                LeadView -->|Renders| LeadTpl[leadership.html]
+                
+                subgraph Core Logic
+                    Metadata
+                    HTML
+                end
+                
+                subgraph Data Layer
+                    DB[(SQLite DB)]
+                    MD_Files
+                end
+                
+                FormSave -.-> DB
+        </div>
+
+        <h2>Function Highlights</h2>
+        
+        <div class="function-desc">
+            <span class="function-name">get_reports_metadata()</span>
+            <p><strong>Purpose:</strong> Utility function that acts as a file-based data provider. It scans the <code>reports/</code> directory for markdown files and parses their headers and initial paragraphs to provide a list of report summaries without loading full content.</p>
+        </div>
+
+        <div class="function-desc">
+            <span class="function-name">home(request)</span>
+            <p><strong>Purpose:</strong> Main landing page controller. 
+                <ul>
+                    <li><strong>GET:</strong> Prepares the <code>ContactForm</code> and fetches the top 2 featured reports for the index template.</li>
+                    <li><strong>POST:</strong> Processes the contact inquiry, persists it to the database, and provides feedback to the user.</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="function-desc">
+            <span class="function-name">reports_list(request)</span>
+            <p><strong>Purpose:</strong> Catalog view. It retrieves metadata for all available research reports and displays them in a searchable/browsable list.</p>
+        </div>
+
+        <div class="function-desc">
+            <span class="function-name">report_detail(request, slug)</span>
+            <p><strong>Purpose:</strong> Content renderer. It maps the URL slug to a specific markdown file, validates its existence, converts the raw markdown content to structured HTML, and renders the full report.</p>
+        </div>
+
+        <div class="function-desc">
+            <span class="function-name">leadership(request)</span>
+            <p><strong>Purpose:</strong> Static content delivery. Renders the professional profile and leadership team information page.</p>
+        </div>
+
+        <h2>Python Scripts Overview</h2>
+        
+        <div class="function-desc">
+            <span class="function-name">manage.py</span>
+            <p><strong>Role:</strong> Project Entry Point. 
+            The command-line utility for administrative tasks. It allows running the development server (<code>runserver</code>), creating database migrations (<code>makemigrations</code>), applying them (<code>migrate</code>), and creating superusers.</p>
+        </div>
+
+        <div class="function-desc">
+            <span class="function-name">core/forms.py</span>
+            <p><strong>Role:</strong> Data Validation. 
+            Defines <code>ContactForm</code>, which maps the <code>ContactMessage</code> model to an HTML form. It handles input cleaning and ensures that only valid data (e.g., proper email formats) is saved to the database.</p>
+        </div>
+
+        <div class="function-desc">
+            <span class="function-name">portal_config/settings.py</span>
+            <p><strong>Role:</strong> System Configuration. 
+            The "brain" of the project. It defines database connections, installed apps (including <code>core</code>), security keys, and static file handling via <code>whitenoise</code> for production-ready CSS/JS delivery.</p>
+        </div>
+
+        <div class="function-desc">
+            <span class="function-name">portal_config/urls.py & core/urls.py</span>
+            <p><strong>Role:</strong> Traffic Routing. 
+            The project URL configuration includes the app-specific URLs. This separation allows the <code>core</code> app to be modular and reusable in other Django projects.</p>
+        </div>
+
+        <div class="function-desc">
+            <span class="function-name">portal_config/wsgi.py & asgi.py</span>
+            <p><strong>Role:</strong> Server Interface. 
+            Standard interfaces for web servers (like Gunicorn or Daphne) to communicate with the Django application. WSGI is for synchronous requests, while ASGI supports asynchronous features.</p>
+        </div>
+
+        <h2>MVC/MVT Architecture Segregation</h2>
+        <p>This application follows the <strong>Django MVT (Model-View-Template)</strong> pattern, which is a variation of the classic MVC (Model-View-Controller) architecture.</p>
+        
+        <div class="function-desc" style="border-left-color: #e67e22;">
+            <span class="function-name">Model (Data Layer)</span>
+            <p><strong>Files:</strong> <code>core/models.py</code>, <code>reports/*.md</code><br>
+            Responsibility: Manages the data and business rules. In this portal, the "Model" is split between the SQL database (for user messages) and the file system (for research content).</p>
+        </div>
+
+        <div class="function-desc" style="border-left-color: #27ae60;">
+            <span class="function-name">View / Template (Presentation Layer)</span>
+            <p><strong>Files:</strong> <code>core/templates/core/*.html</code>, <code>core/static/</code><br>
+            Responsibility: What the user sees. Django calls this the <strong>Template</strong> layer. It handles the layout (base.html), styling (CSS), and interactive components (JavaScript).</p>
+        </div>
+
+        <div class="function-desc" style="border-left-color: #8e44ad;">
+            <span class="function-name">Controller / View Logic (Process Layer)</span>
+            <p><strong>Files:</strong> <code>core/views.py</code>, <code>core/urls.py</code><br>
+            Responsibility: The glue between the Model and the View. Django calls this the <strong>View</strong> layer. It receives HTTP requests, fetches data from the Model, and passes it to the Template for rendering.</p>
+        </div>
+
+        <h2>Data Models</h2>
+        <table>
+            <tr>
+                <th>Model</th>
+                <th>Description</th>
+                <th>Fields</th>
+            </tr>
+            <tr>
+                <td><strong>ContactMessage</strong></td>
+                <td>Stores lead generation and inquiry data from the contact form.</td>
+                <td>name, email, subject, message, created_at</td>
+            </tr>
+            <tr>
+                <td><strong>File System (Reports)</strong></td>
+                <td>While not a DB model, the <code>.md</code> files in <code>reports/</code> act as the primary content storage.</td>
+                <td>Title (H1), Summary (First Paragraph), Content (Body)</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

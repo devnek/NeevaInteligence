@@ -1,0 +1,891 @@
+/* =================================================================
+   NeevaIntelligence — Main Stylesheet
+   Modern CSS · Custom Properties · Dark/Light Theme · Responsive
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   1. Custom Properties (Theme System)
+   ----------------------------------------------------------------- */
+:root {
+    /* Brand */
+    --primary: #7b2ff7;
+    --primary-hover: #6a25d9;
+    --accent: #00f2ff;
+
+    /* Dark Theme (Default) */
+    --bg: #0a0a0b;
+    --bg-alt: #0d0d12;
+    --card-bg: #111114;
+    --text-main: #ffffff;
+    --text-dim: #a0a0a5;
+    --border: rgba(255, 255, 255, 0.08);
+    --nav-bg: rgba(10, 10, 11, 0.95);
+    --input-bg: #16161a;
+    --success-bg: rgba(0, 200, 100, 0.1);
+    --success-border: rgba(0, 200, 100, 0.3);
+    --success-text: #00c864;
+
+    /* Layout */
+    --navbar-height: 88px;
+    --container-max: 1200px;
+    --container-pad: 40px;
+}
+
+[data-theme="light"] {
+    --bg: #f8f9fa;
+    --bg-alt: #eef0f2;
+    --card-bg: #ffffff;
+    --text-main: #1a1a1b;
+    --text-dim: #4a4a4f;
+    --border: rgba(0, 0, 0, 0.1);
+    --nav-bg: rgba(248, 249, 250, 0.95);
+    --input-bg: #ffffff;
+    --success-bg: rgba(0, 160, 80, 0.08);
+    --success-border: rgba(0, 160, 80, 0.25);
+    --success-text: #008844;
+}
+
+
+/* -----------------------------------------------------------------
+   2. Reset & Base
+   ----------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: 'Lato', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    color: inherit;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+
+/* -----------------------------------------------------------------
+   3. Typography
+   ----------------------------------------------------------------- */
+h1, h2, h3, h4, .logo {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 700;
+}
+
+h1 { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; }
+h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
+
+
+/* -----------------------------------------------------------------
+   4. Layout
+   ----------------------------------------------------------------- */
+.container {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+}
+
+.content-wrapper {
+    min-height: 80vh;
+    flex: 1;
+}
+
+
+/* -----------------------------------------------------------------
+   5. Navbar
+   ----------------------------------------------------------------- */
+.navbar {
+    padding: 25px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-decoration: none;
+    color: var(--text-main);
+    flex-shrink: 0;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    position: relative;
+    padding-bottom: 4px;
+}
+
+.nav-links a:hover,
+.nav-links a.nav-active {
+    color: var(--primary);
+}
+
+.nav-links a.nav-active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 1px;
+}
+
+
+/* -----------------------------------------------------------------
+   6. Hamburger Menu (Mobile)
+   ----------------------------------------------------------------- */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    z-index: 1001;
+}
+
+.hamburger-line {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text-main);
+    border-radius: 1px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+
+/* -----------------------------------------------------------------
+   7. Breadcrumbs
+   ----------------------------------------------------------------- */
+.breadcrumb {
+    padding-top: calc(var(--navbar-height) + 30px);
+}
+
+.breadcrumb-list {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+.breadcrumb-list li {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-list li + li::before {
+    content: '›';
+    margin: 0 12px;
+    color: var(--text-dim);
+    opacity: 0.5;
+    font-size: 1rem;
+}
+
+.breadcrumb-list a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-list a:hover {
+    color: var(--primary);
+}
+
+.breadcrumb-list .breadcrumb-current {
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+
+/* -----------------------------------------------------------------
+   8. Hero Section (Home)
+   ----------------------------------------------------------------- */
+.hero {
+    padding: 200px 0 100px;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero h1 {
+    margin-bottom: 30px;
+    background: linear-gradient(to right, var(--text-main), var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    font-size: 1.4rem;
+    color: var(--text-dim);
+    margin-bottom: 40px;
+}
+
+.hero-services-list {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.hero-services-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+}
+
+.hero-services-list i {
+    color: var(--primary);
+}
+
+
+/* -----------------------------------------------------------------
+   9. Sections (General)
+   ----------------------------------------------------------------- */
+section {
+    padding: 100px 0;
+}
+
+.section-label {
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+h2.section-title {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    margin-bottom: 60px;
+}
+
+.section-dark {
+    background: var(--bg-alt);
+}
+
+
+/* -----------------------------------------------------------------
+   10. Inner Pages (common pattern for sub-pages)
+   ----------------------------------------------------------------- */
+.inner-page {
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+
+/* When there are no breadcrumbs, add extra top padding */
+.inner-page:first-child {
+    padding-top: calc(var(--navbar-height) + 60px);
+}
+
+
+/* -----------------------------------------------------------------
+   11. Reports Grid & Cards
+   ----------------------------------------------------------------- */
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+    gap: 30px;
+}
+
+.report-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 50px;
+    border-radius: 20px;
+    transition: all 0.4s ease;
+}
+
+.report-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.report-card h3 {
+    color: var(--text-main);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.report-card p {
+    color: var(--text-dim);
+    margin-bottom: 25px;
+}
+
+.archive-link-wrapper {
+    margin-top: 50px;
+    text-align: center;
+}
+
+/* Report Detail */
+.report-article {
+    background: var(--card-bg);
+    padding: 60px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+}
+
+.report-content {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+}
+
+.report-content h1 {
+    color: var(--text-main);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+.report-content h2 {
+    color: var(--text-main);
+    font-size: 1.8rem;
+    border-left: 4px solid var(--primary);
+    padding-left: 15px;
+    margin: 40px 0 20px;
+}
+
+.report-content p {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+}
+
+.report-content strong {
+    color: var(--accent);
+}
+
+.report-content ul {
+    margin-left: 20px;
+    margin-bottom: 20px;
+    list-style: disc;
+}
+
+.report-content li {
+    margin-bottom: 8px;
+}
+
+.report-cta {
+    margin-top: 50px;
+    text-align: center;
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+    padding: 40px;
+    background: var(--card-bg);
+}
+
+.report-cta h3 {
+    color: var(--text-main);
+}
+
+.report-cta p {
+    color: var(--text-dim);
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+
+/* -----------------------------------------------------------------
+   12. Contact Section
+   ----------------------------------------------------------------- */
+.contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+}
+
+.contact-info-text .section-title {
+    margin-bottom: 30px;
+}
+
+.contact-description {
+    color: var(--text-dim);
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+}
+
+.contact-container {
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    padding: 18px;
+    color: var(--text-main);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    border-color: var(--primary);
+}
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+}
+
+.alert-success {
+    background: var(--success-bg);
+    border: 1px solid var(--success-border);
+    color: var(--success-text);
+}
+
+
+/* -----------------------------------------------------------------
+   13. Leadership / About
+   ----------------------------------------------------------------- */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.about-image {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: 20px;
+    filter: grayscale(20%);
+    box-shadow: 20px 20px 0px var(--primary);
+    transition: all 0.4s ease;
+}
+
+.about-image:hover img {
+    filter: grayscale(0%);
+    transform: translate(10px, 10px);
+    box-shadow: 10px 10px 0px var(--accent);
+}
+
+.about-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: var(--text-main);
+}
+
+.about-text p {
+    font-size: 1.15rem;
+    color: var(--text-dim);
+    margin-bottom: 25px;
+    line-height: 1.8;
+}
+
+.expertise-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.tag-mini {
+    background: rgba(123, 47, 247, 0.1);
+    border: 1px solid var(--border);
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.biography-deep-dive {
+    margin-top: 100px;
+}
+
+.biography-deep-dive p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-dim);
+}
+
+
+/* -----------------------------------------------------------------
+   14. Buttons
+   ----------------------------------------------------------------- */
+.btn-submit {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: var(--primary-hover);
+}
+
+.btn-read {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s ease;
+}
+
+.btn-read:hover {
+    gap: 15px;
+}
+
+.btn-outline {
+    display: inline-block;
+    border: 1px solid var(--primary);
+    color: var(--text-main);
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-back {
+    color: var(--primary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 40px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: gap 0.3s ease;
+}
+
+.btn-back:hover {
+    gap: 14px;
+}
+
+
+/* -----------------------------------------------------------------
+   15. Footer
+   ----------------------------------------------------------------- */
+.site-footer {
+    padding: 60px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg-alt);
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+}
+
+.footer-logo {
+    font-size: 1rem;
+}
+
+.footer-nav {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.footer-nav a:hover {
+    color: var(--primary);
+}
+
+.footer-content p {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+}
+
+
+/* -----------------------------------------------------------------
+   16. Theme Toggle
+   ----------------------------------------------------------------- */
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--border);
+    color: var(--primary);
+}
+
+
+/* -----------------------------------------------------------------
+   17. Utilities
+   ----------------------------------------------------------------- */
+.hidden {
+    display: none !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* -----------------------------------------------------------------
+   18. Responsive Design
+   ----------------------------------------------------------------- */
+
+/* Tablet */
+@media (max-width: 992px) {
+    :root {
+        --container-pad: 24px;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 50px;
+    }
+
+    .about-image {
+        margin: 0 auto;
+    }
+
+    .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .report-article {
+        padding: 40px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--bg);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 32px;
+        z-index: 999;
+        padding: 80px 40px;
+    }
+
+    .nav-links.nav-open {
+        display: flex;
+    }
+
+    .nav-links a {
+        font-size: 1.2rem;
+    }
+
+    .nav-links a.nav-active::after {
+        bottom: -8px;
+    }
+
+    .hero {
+        padding: 150px 0 60px;
+        min-height: auto;
+    }
+
+    .hero-services-list {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .reports-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-card {
+        padding: 30px;
+    }
+
+    .report-article {
+        padding: 24px;
+    }
+
+    .report-cta {
+        padding: 24px;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    h2.section-title {
+        margin-bottom: 40px;
+    }
+
+    .biography-deep-dive {
+        margin-top: 60px;
+    }
+
+    .breadcrumb {
+        padding-top: calc(var(--navbar-height) + 16px);
+    }
+
+    .footer-nav {
+        gap: 16px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    :root {
+        --container-pad: 16px;
+    }
+
+    .expertise-tags {
+        justify-content: center;
+    }
+
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Leadership | NeevaIntelligence{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb-list">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><span class="breadcrumb-current" aria-current="page">Leadership</span></li>
+        </ol>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<section class="inner-page">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-image">
+                <img src="{% static 'core/images/profile.jpeg' %}" alt="Neetu Thapliyal — Lead Analyst at NeevaIntelligence" loading="lazy">
+            </div>
+            <div class="about-text">
+                <span class="section-label">Leadership</span>
+                <h2>Expertise Driven by Data</h2>
+                <p>NeevaIntelligence is led by <strong>Neetu Thapliyal</strong>, a results-driven data analytics professional and Research Associate with an M.Sc. in Agriculture (Genetics). With a proven track record as a Lead Analyst at Mordor Intelligence, Neetu specializes in translating complex datasets into actionable business strategies.</p>
+                <p>Having navigated diverse research environments—from the National Agri-Food Biotech Institute to policy-influencing roles at the National Seed Association of India—she brings a unique multi-disciplinary perspective to market intelligence.</p>
+                <div class="expertise-tags">
+                    <span class="tag-mini">Market Intelligence</span>
+                    <span class="tag-mini">Statistical Analysis</span>
+                    <span class="tag-mini">Regulatory Strategy</span>
+                    <span class="tag-mini">Data Analytics</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="biography-deep-dive">
+            <span class="section-label">Professional Philosophy</span>
+            <p>At NeevaIntelligence, our philosophy is simple: Data is not the end, but the means. We believe that true intelligence lies in the intersection of rigorous statistical analysis and human-centric market context. By stripping away the noise, we empower decision-makers with the clarity required to lead in volatile markets.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
